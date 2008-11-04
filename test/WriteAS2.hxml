@@ -1,0 +1,3 @@
+-neko app_as2.n
+-main test.WriteAS2
+-cp ../

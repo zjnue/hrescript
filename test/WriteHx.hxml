@@ -1,0 +1,3 @@
+-neko app_hx.n
+-main test.WriteHx
+-cp ../
