@@ -687,6 +687,15 @@ class Parser {
 			null;
 		}
 	}
+	
+	private function unopSuffixCheck( e : Expr ) {
+		if( isBlock(e) )
+			return true;
+		return switch( e ) {
+			case EParent(_): true;
+			default: false;
+		}
+	}
 
 	function parseExprNext( s : haxe.io.Input, e1 : Expr ) {
 		var tk = token(s);
@@ -694,7 +703,7 @@ class Parser {
 		case TOp(op):
 			for( x in unopsSuffix )
 				if( x == op ) {
-					if( isBlock(e1) ) { // covers: function() {} ++i;
+					if( unopSuffixCheck(e1) ) { // covers: function() {} ++i; if(true) --i; etc
 						tokens.add(tk);
 						return e1;
 					}
