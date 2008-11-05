@@ -858,9 +858,10 @@ class Parser {
 		return b.toString();
 	}
 	
-	function returnToken( tok : Token ) {
+	function returnToken( tok : Token, ?inc : Int ) {
 		currentWhite = [];
-		if( tok != TSemicolon ) t++; 
+		if( inc == null ) inc = 1;
+		if( tok != TSemicolon ) t = t + inc; 
 		return tok;
 	}
 	
@@ -911,7 +912,7 @@ class Parser {
 							if( exp == 10 && readChar(s) == 46 ) {
 								tokens.add(TOp("..."));
 								if( n == 0 ) z = "";
-								return returnToken( TConst( CInt( z + Std.string(n) ) ) );
+								return returnToken( TConst( CInt( z + Std.string(n) ) ), 2 );
 							}
 							throw Error.EInvalidChar(char);
 						}
