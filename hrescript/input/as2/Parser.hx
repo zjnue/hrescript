@@ -22,8 +22,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-package input.as2;
-import input.as2.Expr;
+package hrescript.input.as2;
+import hrescript.input.as2.Expr;
 
 enum Token {
 	TEof;

@@ -22,9 +22,9 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-package input.hx;
+package hrescript.input.hx;
 
-import input.hx.Expr;
+import hrescript.input.hx.Expr;
 
 enum Token {
 	TEof;

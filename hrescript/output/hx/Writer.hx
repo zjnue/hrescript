@@ -22,11 +22,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-package output.hx;
+package hrescript.output.hx;
 
-import input.hx.Expr;
-import input.hx.Parser;
-import output.hx.WriteUtil;
+import hrescript.input.hx.Expr;
+import hrescript.input.hx.Parser;
+import hrescript.output.hx.WriteUtil;
 
 enum Content {
 	Tok( s : String );
