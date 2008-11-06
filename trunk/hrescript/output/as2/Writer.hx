@@ -22,10 +22,10 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-package output.as2;
+package hrescript.output.as2;
 
-import input.as2.Expr;
-import input.as2.Parser;
+import hrescript.input.as2.Expr;
+import hrescript.input.as2.Parser;
 
 class Writer{
 	private var comments :Hash<String>;

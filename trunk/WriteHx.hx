@@ -22,11 +22,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-package test;
+package;
 
-import input.hx.Parser;
-import input.hx.Expr;
-import output.hx.Writer;
+import hrescript.input.hx.Parser;
+import hrescript.input.hx.Expr;
+import hrescript.output.hx.Writer;
 import neko.FileSystem;
 
 class WriteHx { 

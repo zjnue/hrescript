@@ -22,11 +22,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-package test;
+package;
 
-import input.as2.Parser;
-import input.as2.Expr;
-import output.as2.Writer;
+import hrescript.input.as2.Parser;
+import hrescript.input.as2.Expr;
+import hrescript.output.as2.Writer;
 import neko.FileSystem;
 
 class WriteAS2 { 
@@ -89,7 +89,7 @@ class WriteAS2 {
 	} 
 	
 	function parseScript( s : String ) {
-		var parser = new input.as2.Parser();
+		var parser = new Parser();
 		var si = new haxe.io.StringInput( s );
 		var program = parser.parse( si );
 		//trace("program = "+program);
