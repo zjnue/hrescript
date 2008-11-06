@@ -205,7 +205,8 @@ class Writer {
 		var a = new Array();
 		var params = Type.enumParameters(e);
 		if( params[0].length == 0 )
-			return [ Tok("{"), Tok("}") ];
+			//return [ Tok("{"), Tok("}") ];
+			return [ Tok("{"), Indent(indent+1), Indent(indent), Tok("}") ];
 		if( ctx.blockStartSpace == null ) ctx.blockStartSpace = true;
 		if( ctx.blockBraces == null ) ctx.blockBraces = true;
 		if( ctx.blockBreakAfterTopBrace == null ) ctx.blockBreakAfterTopBrace = true;

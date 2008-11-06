@@ -37,6 +37,7 @@ class WriteUtil {
 	var newlineStr : String;
 	var semiStr : String;
 	var skipNewLine : Bool;
+	var skipIndent : Bool;
 	var swallowEmptyBracketWhite : Bool;
 	var swallowEmptyBlockBracketWhite : Bool;
 	
@@ -46,6 +47,7 @@ class WriteUtil {
 		newlineStr = "\n";
 		semiStr = ";";
 		skipNewLine = false;
+		skipIndent = false;
 		swallowEmptyBracketWhite = true;
 		swallowEmptyBlockBracketWhite = true;
 	}
@@ -68,6 +70,7 @@ class WriteUtil {
 				case Tok(s):
 					skipWhiteChar = null;
 					skipNewLine = false;
+					skipIndent = false;
 					out.add( s );
 					tCount++;
 					var nextNonWhite = getNextNonWhite( a, aCount+1 );
@@ -79,12 +82,18 @@ class WriteUtil {
 							if( s == "[" && Type.enumEq(nextNonWhite,Tok("]")) ) skipWhiteChar = "]";
 						if( swallowEmptyBracketWhite )
 							if( s == "(" && Type.enumEq(nextNonWhite,Tok(")")) ) skipWhiteChar = ")";
-						out.add( comment( tCount, aCount, a, comments, indent ) );
+						var c = comment( tCount, aCount, a, comments, indent );
+						if( s == "{" && c == "" && Type.enumEq(nextNonWhite,Tok("}")) ) {
+							skipWhiteChar = "}";
+							skipIndent = true;
+						}
+						out.add( c );
 					}
 				case Indent(count):
 					indent = count;
-					for( j in 0...count )
-						out.add( indentStr );
+					if( ! skipIndent )
+						for( j in 0...count )
+							out.add( indentStr );
 				case White(e,prop): 
 					if( skipWhiteChar == null )
 						out.add( getWhite(e,prop) );
@@ -122,6 +131,18 @@ class WriteUtil {
 		return null;
 	}
 	
+	private function getLastIndentBeforeNonWhite( a : Array<Content>, aCount : Int ) {
+		var out = null;
+		for( i in aCount...a.length ) {
+			switch(a[i]) {
+				case Indent(ind): out = ind;
+				case White(_,_), Newline:
+				default: break;
+			}
+		}
+		return out;
+	}
+	
 	private function numFollowingBreaks( a : Array<Content>, aCount : Int ) {
 		var num = 0;
 		for( i in aCount...a.length ) {
@@ -145,21 +166,31 @@ class WriteUtil {
 			var preBreaks = Std.int( Math.min( 2, getNumLinebreaks(tc.pre) ) );
 			var postBreaks = Std.int( Math.min( 2, getNumLinebreaks(tc.post) ) );
 			var nextInd = getNextIndentBeforeNonWhite( arr, aCount+1 );
-			var ind = ( nextInd != null ) ? nextInd : indent;
+			var ind = indent;
+			if( nextInd != null && nextInd > ind )
+				ind = nextInd;
+			var lastInd = getLastIndentBeforeNonWhite( arr, aCount+1 );
+			var last = ( lastInd != null ) ? lastInd : indent;
+			var nextKey = Std.string( majorCommentIndx ) + "_" + Std.string( minorCommentIndx + 1 );
+			var followingIsComment = comments.exists( nextKey );
 			if( tc.multiline ) {
-				a.push( if( preBreaks == 0 ) " " else getBreakStr(preBreaks) + getIndent( ind ) );
+				if( minorCommentIndx == 0 )
+					a.push( if( preBreaks == 0 ) " " else getBreakStr(preBreaks) + getIndent( ind ) );
 				a.push( tc.text.split(String.fromCharCode(13)).join("") );
 				if( postBreaks == 0 )
-					a.push( "" )
+					a.push( "" );
 				else {
-					a.push( getBreakStr( postBreaks ) );
+					a.push( getBreakStr( postBreaks ) + getIndent( if( followingIsComment ) ind else last ) );
 					skipNewLine = true;
+					skipIndent = true;
 				}
 			} else {
-				a.push( if( preBreaks == 0 ) " " else getBreakStr(preBreaks) + getIndent( ind ) );
+				if( minorCommentIndx == 0 )
+					a.push( if( preBreaks == 0 ) " " else getBreakStr(preBreaks) + getIndent( ind ) );
 				a.push( tc.text.split(String.fromCharCode(13)).join("") );
-				if( numFollowingBreaks(arr, aCount+1) == 0 )
-					a.push( getBreakStr(postBreaks) + getIndent(ind) );
+				a.push( getBreakStr( postBreaks ) + getIndent( if( followingIsComment ) ind else last ) );
+				skipNewLine = true;
+				skipIndent = true;
 			}
 			key = Std.string( majorCommentIndx ) + "_" + Std.string( ++minorCommentIndx );
 		}
