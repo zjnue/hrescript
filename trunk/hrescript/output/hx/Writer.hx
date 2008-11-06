@@ -92,7 +92,7 @@ class Writer {
 		var i = 0;
 		for( e in eArr ) {
 			var isLast = (++i == eArr.length);
-			if( (ctx.breakBeforeMethods && (getInnerExprName(e) == "EFunction")) || 
+			if( (ctx.breakBeforeMethods && (getInnerExprName(e) == "EFunction") && i > 1 ) || 
 				(getInnerExprName(e) == "EClass") || (getInnerExprName(e) == "EInterface") ||
 				(getInnerExprName(e) == "ETypeDef") || (getInnerExprName(e) == "EEnum")
 			)
