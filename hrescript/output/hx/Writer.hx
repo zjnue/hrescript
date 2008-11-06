@@ -757,7 +757,7 @@ class Writer {
 			a.push( Newline );
 			a.push( getIndent( ++indent ) );
 		}
-		a = a.concat( doExpr(params[0], { blockBreakAfterBottomBrace : false }) );
+		a = a.concat( doExpr(params[0], { blockBreakAfterBottomBrace : false, blockStartSpace : false }) );
 		if( Type.enumConstructor(params[0]) != "EBlock" ) {
 			addCondSemi(a, params[0]);
 			a.push( Newline );
