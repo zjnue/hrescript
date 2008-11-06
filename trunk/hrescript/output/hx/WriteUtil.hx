@@ -38,6 +38,7 @@ class WriteUtil {
 	var semiStr : String;
 	var skipNewLine : Bool;
 	var skipIndent : Bool;
+	var skipWhite : Bool;
 	var swallowEmptyBracketWhite : Bool;
 	var swallowEmptyBlockBracketWhite : Bool;
 	
@@ -48,6 +49,7 @@ class WriteUtil {
 		semiStr = ";";
 		skipNewLine = false;
 		skipIndent = false;
+		skipWhite = false;
 		swallowEmptyBracketWhite = true;
 		swallowEmptyBlockBracketWhite = true;
 	}
@@ -64,13 +66,13 @@ class WriteUtil {
 		var out = new StringBuf();
 		var commentAfterSemi = false;
 		out.add( comment( tCount, aCount, a, comments, indent ) );
-		var skipWhiteChar = null;
+		skipWhite = false;
 		for( i in a ) {
 			switch(i) {
 				case Tok(s):
-					skipWhiteChar = null;
 					skipNewLine = false;
 					skipIndent = false;
+					skipWhite = false;
 					out.add( s );
 					tCount++;
 					var nextNonWhite = getNextNonWhite( a, aCount+1 );
@@ -79,12 +81,12 @@ class WriteUtil {
 					else {
 						commentAfterSemi = false;
 						if( swallowEmptyBlockBracketWhite )
-							if( s == "[" && Type.enumEq(nextNonWhite,Tok("]")) ) skipWhiteChar = "]";
+							if( s == "[" && Type.enumEq(nextNonWhite,Tok("]")) ) skipWhite = true;
 						if( swallowEmptyBracketWhite )
-							if( s == "(" && Type.enumEq(nextNonWhite,Tok(")")) ) skipWhiteChar = ")";
+							if( s == "(" && Type.enumEq(nextNonWhite,Tok(")")) ) skipWhite = true;
 						var c = comment( tCount, aCount, a, comments, indent );
 						if( s == "{" && c == "" && Type.enumEq(nextNonWhite,Tok("}")) ) {
-							skipWhiteChar = "}";
+							skipWhite = true;
 							skipIndent = true;
 						}
 						out.add( c );
@@ -95,7 +97,7 @@ class WriteUtil {
 						for( j in 0...count )
 							out.add( indentStr );
 				case White(e,prop): 
-					if( skipWhiteChar == null )
+					if( ! skipWhite )
 						out.add( getWhite(e,prop) );
 				case Semi:
 					out.add( semiStr );
@@ -183,6 +185,7 @@ class WriteUtil {
 					a.push( getBreakStr( postBreaks ) + getIndent( if( followingIsComment ) ind else last ) );
 					skipNewLine = true;
 					skipIndent = true;
+					skipWhite = true;
 				}
 			} else {
 				if( minorCommentIndx == 0 )
@@ -191,6 +194,7 @@ class WriteUtil {
 				a.push( getBreakStr( postBreaks ) + getIndent( if( followingIsComment ) ind else last ) );
 				skipNewLine = true;
 				skipIndent = true;
+				skipWhite = true;
 			}
 			key = Std.string( majorCommentIndx ) + "_" + Std.string( ++minorCommentIndx );
 		}
