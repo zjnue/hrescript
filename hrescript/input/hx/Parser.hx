@@ -322,10 +322,13 @@ class Parser {
 				case TOp(id):
 					if( id == "->" )
 						return EFuncPoint( EVector( path, typeParams, constraintParams ), getVectorPath(s) );
-					else if( id.indexOf(">") != -1 )
+					else if( id.indexOf(">") != -1 ) {
+						if( id.length > 1 )
+							t += id.length-1;	//we need to update token count as '>>>' (in A<B<C<D>>>) etc
+												//is later used in a single '>' token context
 						for( c in 0...id.length )
 							tokens.add(TOp(">"));
-					else
+					} else
 						tokens.add(tk);
 				case TPClose:
 					tk = token(s);
