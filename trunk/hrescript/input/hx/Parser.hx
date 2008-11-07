@@ -282,6 +282,7 @@ class Parser {
 		var tk = token(s);
 		var typeParams = new Array();
 		var constraintParams = new Array();
+		var cBrackets = false;
 		if( Type.enumEq(tk,TOp("<")) ) {
 			while( ! Type.enumEq(tk,TOp(">")) ) {
 				tk = token(s);
@@ -298,6 +299,7 @@ class Parser {
 			case TDoubleDot:
 				tk = token(s);
 				if( tk == TPOpen ) {
+					cBrackets = true;
 					while( tk != TPClose ) {
 						constraintParams.push( getVectorPath(s) );
 						tk = token(s);
@@ -305,23 +307,23 @@ class Parser {
 							tokens.add(tk);
 					}
 					tk = token(s);
-					return EVector( path, typeParams, constraintParams );
+					return EVector( path, typeParams, constraintParams, cBrackets );
 				} else {
 					tokens.add(tk);
-					return EVector( path, typeParams, [getVectorPath(s)] );
+					return EVector( path, typeParams, [getVectorPath(s)], cBrackets );
 				}
 			case TComma:
 				if( ! isNested )
 					tokens.add(tk);
-				return EVector( path, typeParams, constraintParams );
+				return EVector( path, typeParams, constraintParams, cBrackets );
 			case TPClose:
 				tokens.add(tk);
-				return EVector( path, typeParams, constraintParams );
+				return EVector( path, typeParams, constraintParams, cBrackets );
 			default: 
 				switch(tk) {
 				case TOp(id):
 					if( id == "->" )
-						return EFuncPoint( EVector( path, typeParams, constraintParams ), getVectorPath(s) );
+						return EFuncPoint( EVector( path, typeParams, constraintParams, cBrackets ), getVectorPath(s) );
 					else if( id.indexOf(">") != -1 ) {
 						if( id.length > 1 )
 							t += id.length-1;	//we need to update token count as '>>>' (in A<B<C<D>>>) etc
@@ -332,7 +334,7 @@ class Parser {
 						tokens.add(tk);
 				case TPClose:
 					tk = token(s);
-					return EVector( path, typeParams, constraintParams );
+					return EVector( path, typeParams, constraintParams, cBrackets );
 				default: // ids without <> are allowed to 'slip through' here
 					tokens.add(tk);
 				}
@@ -340,10 +342,10 @@ class Parser {
 		}
 		tk = token(s);
 		if( Type.enumEq(tk,TOp("->")) )
-			return EFuncPoint( EVector( path, typeParams, constraintParams ), getVectorPath(s) );
+			return EFuncPoint( EVector( path, typeParams, constraintParams, cBrackets ), getVectorPath(s) );
 		else {
 			tokens.add(tk);
-			return EVector( path, typeParams, constraintParams );
+			return EVector( path, typeParams, constraintParams, cBrackets );
 		}
 	}
 	
