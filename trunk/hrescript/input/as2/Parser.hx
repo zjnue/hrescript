@@ -246,7 +246,7 @@ class Parser {
 		}
 	}
 	
-	function getDotPath( s : haxe.io.Input ) {
+	function getDotPath( s : haxe.io.Input, ?starAllowed : Bool ) {
 		var str = "";
 		var t = token(s);
 		var dot = true;
@@ -256,6 +256,13 @@ class Parser {
 				if( dot ) {
 					str += tokenString(t); t = token(s);
 					dot = false;
+				} else
+					break;
+			case TOp(op):
+				if( op == "*" && starAllowed ) {
+					str += tokenString(t); t = token(s);
+					if( t != TSemicolon )
+						unexpected(t);
 				} else
 					break;
 			case TDot: str += tokenString(t); t = token(s); dot = true;
@@ -325,7 +332,7 @@ class Parser {
 				tokens.add(tk);
 			var e = parseExpr(s);
 			EInterface( n, i, e);
-		case "import": EImport( getDotPath(s) );
+		case "import": EImport( getDotPath(s, true) );
 		case "if":
 			var cond = parseExpr(s);
 			var e1 = parseExpr(s);
