@@ -842,7 +842,7 @@ class Writer {
 				a = a.concat( [ Tok("("), White(e,"postLeftBracket") ] );
 			for( cp in cparams ) {
 				a = a.concat( doExpr(cp, {}) );
-				a = a.concat( [ Tok(","), White(e,"postComma") ] );
+				a = a.concat( [ Tok(","), White(e,"postConstraintComma") ] );
 			}
 			if( cparams.length > 0 ) {
 				a.pop(); a.pop();
