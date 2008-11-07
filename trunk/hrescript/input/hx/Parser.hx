@@ -391,24 +391,38 @@ class Parser {
 			var v = null;
 			var ext = null;
 			var a = [];
+			var isDuckType = false;
 			if( tk == TBrOpen ) {
 				tk = token(s);
 				if( Type.enumEq(tk,TOp(">")) ) {
 					ext = getVectorPath(s);
 					tk = token(s); // swallow comma
 					tk = token(s);
+					if( ! Type.enumEq(tk,TId("var")) ) {
+						isDuckType = true;
+						tokens.add(tk);
+					}
+				} else {
+					if( ! Type.enumEq(tk,TId("var")) ) {
+						isDuckType = true;
+						tokens.add(tk);
+					}
 				}
-				while( tk != TBrClose ) {
-					tokens.add(tk);
-					var dec = parseExpr(s); //TODO: some var validation
-					a.push( dec );
-					tk = token(s); // swallow semi
-					tk = token(s);
+				if( ! isDuckType ) {
+					while( tk != TBrClose ) {
+						tokens.add(tk);
+						var dec = parseExpr(s); //TODO: some var validation
+						a.push( dec );
+						tk = token(s); // swallow semi
+						tk = token(s);
+					}
 				}
 			} else {
 				tokens.add(tk);
 				v = getVectorPath(s);
 			}
+			if( isDuckType )
+				v = EDuckType( ext, parseExprTypedList( s, TBrClose ) );
 			tk = token(s);
 			tokens.add(tk);
 			ETypeDef( n, v, ext, a, (tk == TSemicolon) );
