@@ -86,8 +86,9 @@ class WriteUtil {
 							if( s == "(" && Type.enumEq(nextNonWhite,Tok(")")) ) skipWhite = true;
 						var c = comment( tCount, aCount, a, comments, indent );
 						if( s == "{" && c == "" && Type.enumEq(nextNonWhite,Tok("}")) ) {
-							skipWhite = true;
+							skipNewLine = true;
 							skipIndent = true;
+							skipWhite = true;
 						}
 						out.add( c );
 					}

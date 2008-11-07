@@ -204,7 +204,7 @@ class Writer {
 		//EBlock( e : Array<Expr> );
 		var a = new Array();
 		var params = Type.enumParameters(e);
-		if( params[0].length == 0 )
+		if( params[0].length == 0 && ctx.blockBraces )
 			//return [ Tok("{"), Tok("}") ];
 			return [ Tok("{"), Indent(indent+1), Indent(indent), Tok("}") ];
 		if( ctx.blockStartSpace == null ) ctx.blockStartSpace = true;
@@ -964,20 +964,22 @@ class Writer {
 	}
 	
 	private function doECast( e : Expr, ctx : Dynamic ) {
-		//ECast( e : Expr, type : Expr );
+		////ECast( e : Expr, type : Expr );
+		//ECast( e : Expr, type : Expr, brackets : Bool );
 		var a = new Array();
 		var params = Type.enumParameters(e);
 		a = a.concat( [ Tok("cast") ] );
-		if( params[1] == null ) {
+		if( params[2] )
+			a = a.concat( [ White(e,"preLeftBracket"), Tok("("), White(e,"postLeftBracket") ] );
+		else
 			a.push( White(e,"postKeyword") );
-			a = a.concat( doExpr(params[0], {}) );
-			return a;
-		}
-		a = a.concat( [ White(e,"preLeftBracket"), Tok("("), White(e,"postLeftBracket") ] );
 		a = a.concat( doExpr(params[0], {}) );
-		a = a.concat( [ Tok(","), White(e,"postComma") ] );
-		a = a.concat( doExpr(params[1], {}) );
-		a = a.concat( [ White(e,"preRightBracket"), Tok(")") ] );
+		if( params[1] != null ) {
+			a = a.concat( [ Tok(","), White(e,"postComma") ] );
+			a = a.concat( doExpr(params[1], {}) );	
+		}
+		if( params[2] )
+			a = a.concat( [ White(e,"preRightBracket"), Tok(")") ] );
 		return a;
 	}
 	
