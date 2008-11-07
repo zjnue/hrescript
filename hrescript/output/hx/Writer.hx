@@ -124,7 +124,7 @@ class Writer {
 			case EClass(_,_,_,_): "EClass";
 			case EPackage(_): "EPackage";
 			case EInterface(_,_,_): "EInterface";
-			case ETypeDef(_,_,_): "ETypeDef";
+			case ETypeDef(_,_,_,_,_): "ETypeDef";
 			case EEnum(_,_): "EEnum";
 			default: null;
 		};
@@ -877,13 +877,35 @@ class Writer {
 	}
 	
 	private function doETypeDef( e : Expr, ctx : Dynamic ) {
-		//ETypeDef( n : Expr, e : Expr );
+		//ETypeDef( n : Expr, v : Expr, ext : Expr, a : Array<Expr>, hasSemi : Bool );
 		var a = new Array();
 		var params = Type.enumParameters(e);
+		var eArr :Array<Expr> = params[3]; 
 		a = a.concat( [ Tok("typedef"), White(e,"postKeyword") ] );
 		a = a.concat( doExpr(params[0], {}) );
 		a = a.concat( [ White(e,"preAssign"), Tok("="), White(e,"postAssign") ] );
-		a = a.concat( doExpr(params[1], { blockBreakAfterBottomBrace : false }) );
+		if( params[1] != null )
+			a = a.concat( doExpr(params[1], {}) );
+		else {
+			a.push( Tok("{") );
+			if( params[2] != null ) {
+				a = a.concat( [ White(e,"preExt"), Tok(">"), White(e,"postExt") ] );
+				a = a.concat( doExpr(params[2], {}) );
+				a.push( Tok(",") );
+			}
+			a.push( Newline );
+			indent++;
+			for( e in eArr ) {
+				a.push( getIndent() );
+				a = a.concat( doExpr(e, {}) );
+				a.push( Newline );
+			}
+			if( eArr.length > 0 )
+				a.pop();
+			a = a.concat( [ Newline, getIndent(--indent), Tok("}") ] );
+		}
+		if( params[4] )
+			a.push( Tok(";") );
 		return a;
 	}
 	

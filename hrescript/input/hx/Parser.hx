@@ -388,11 +388,30 @@ class Parser {
 			var n = getVectorPath(s);
 			var tk = token(s); // swallow '='
 			tk = token(s);
-			tokens.add(tk);
-			var e = ( tk == TBrOpen ) ? parseExpr(s) : getVectorPath(s);
+			var v = null;
+			var ext = null;
+			var a = [];
+			if( tk == TBrOpen ) {
+				tk = token(s);
+				if( Type.enumEq(tk,TOp(">")) ) {
+					ext = getVectorPath(s);
+					tk = token(s); // swallow comma
+					tk = token(s);
+				}
+				while( tk != TBrClose ) {
+					tokens.add(tk);
+					var dec = parseExpr(s); //TODO: some var validation
+					a.push( dec );
+					tk = token(s); // swallow semi
+					tk = token(s);
+				}
+			} else {
+				tokens.add(tk);
+				v = getVectorPath(s);
+			}
 			tk = token(s);
 			tokens.add(tk);
-			ETypeDef( n, e, (tk == TSemicolon) );
+			ETypeDef( n, v, ext, a, (tk == TSemicolon) );
 		case "enum":
 			var n = getVectorPath(s);
 			var tk = token(s);
