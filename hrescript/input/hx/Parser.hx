@@ -981,7 +981,13 @@ class Parser {
 					default:
 						this.char = char;
 						if( n == 0 ) z = "";
-						return returnToken( TConst( (exp > 0) ? CFloat( Std.string((n * 10 / exp)) ) : CInt( z + Std.string(n) ) ) );
+						var valStr = null;
+						if( exp > 0 ) {
+							valStr = Std.string((n * 10 / exp));
+							if( valStr == "0" ) valStr += ".";
+						} else
+							valStr = z + Std.string(n);	
+						return returnToken( TConst( (exp > 0) ? CFloat( valStr ) : CInt( valStr ) ) );
 					}
 				}
 			case 59: return returnToken( TSemicolon );
@@ -1002,7 +1008,9 @@ class Parser {
 							n = n * 10 + (char - 48);
 						default:
 							this.char = char;
-							return returnToken( TConst( CFloat( Std.string(n/exp) ) ) );
+							var valStr = Std.string(n/exp);
+							if( valStr == "0" ) valStr += ".";
+							return returnToken( TConst( CFloat( valStr ) ) );
 						}
 					}
 				case 46:
