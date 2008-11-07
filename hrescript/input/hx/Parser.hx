@@ -576,6 +576,7 @@ class Parser {
 				} else
 					break;
 			}
+			tokens.add(tk);
 			ESwitch( e1, EBlock(a) );
 		case "var":
 			var tk = token(s);
@@ -656,12 +657,15 @@ class Parser {
 			if( tk == TPOpen ) {
 				var e = parseExpr(s);
 				tk = token(s); // swallow ','
-				var type = getVectorPath(s);
-				tk = token(s); // swallow ')'
-				ECast( e, type );
+				if( tk == TComma ) {
+					var type = getVectorPath(s);
+					tk = token(s); // swallow ')'
+					ECast( e, type, true );
+				} else
+					ECast( e, null, true );
 			} else {
 				tokens.add(tk);
-				ECast( parseExpr(s), null );
+				ECast( parseExpr(s), null, false );
 			}
 		case "break": EBreak;
 		case "continue": EContinue;

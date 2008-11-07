@@ -79,7 +79,7 @@ enum Expr {
 	EPackage( n : String );
 	EOptional( e : Expr );
 	EFuncPoint( e : Expr, nxt : Expr );
-	ECast( e : Expr, type : Expr );
+	ECast( e : Expr, type : Expr, brackets : Bool );
 }
 
 enum Error {
