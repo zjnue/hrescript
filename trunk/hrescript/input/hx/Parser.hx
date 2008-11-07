@@ -508,7 +508,7 @@ class Parser {
 				if( Type.enumEq(tk,TId("#else")) ) {
 					allArr.push( 
 						if( allArr.length == 0 ) ECondIf( cond, EBlock( exprArr ) )
-						else ECondElse( EBlock( exprArr ) )
+						else ECondElseif( cond, EBlock( exprArr ) )
 					);
 					cond = null;
 					exprArr = new Array();
