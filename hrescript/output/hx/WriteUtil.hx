@@ -240,6 +240,11 @@ class WriteUtil {
 					case "postLeftBlockBracket", "preRightBlockBracket": return " ";
 					default:
 				}
+			case EBinop(op,_,_):
+				switch(prop) {
+					case "preOp", "postOp": if( op == "..." ) return "";
+					default:
+				}
 			default:
 		}
 		switch( prop ) {

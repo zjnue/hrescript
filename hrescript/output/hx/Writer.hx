@@ -256,11 +256,9 @@ class Writer {
 			a = a.concat( [ White(e,"preColon"), Tok(":"), White(e,"postColon") ] );
 			a = a.concat( doExpr(ctx.type, {}) );
 		}
-		if( op != "..." )
-			a.push( White(e,"preOp") );
+		a.push( White(e,"preOp") );
 		a.push( Tok(op) );
-		if( op != "..." )
-			a.push( White(e,"postOp") );
+		a.push( White(e,"postOp") );
 		a = a.concat( doExpr(params[2], { usedAsValue : (params[0] == "="), blockStartSpace : ctx.val_blockStartSpace }) );
 		return a;
 	}
