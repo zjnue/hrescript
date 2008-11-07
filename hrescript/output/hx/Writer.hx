@@ -502,8 +502,10 @@ class Writer {
 	private function doEReturn( e : Expr, ctx : Dynamic ) {
 		//EReturn( ?e : Expr );
 		ctx.usedAsValue = true;
+		var val = Type.enumParameters(e)[0];
 		var a = [ Tok("return"), White(e,"postKeyword") ];
-		a = a.concat( doExpr(Type.enumParameters(e)[0], ctx) );
+		if( val != null )
+			a = a.concat( doExpr(val, ctx) );
 		return a;
 	}
 	
