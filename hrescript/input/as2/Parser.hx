@@ -286,6 +286,8 @@ class Parser {
 		case "public": EModifier( parseExpr(s), "public" );
 		case "private": EModifier( parseExpr(s), "private" );
 		case "static": EModifier( parseExpr(s), "static" );
+		case "dynamic": EModifier( parseExpr(s), "dynamic" );
+		case "intrinsic": EModifier( parseExpr(s), "intrinsic" );
 		case "typeof": ETypeof( parseExpr(s) );
 		case "with":
 			var cond = parseExpr(s);
