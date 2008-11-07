@@ -544,7 +544,7 @@ class Writer {
 		a = a.concat( doExpr(params[0], {}) );
 		a = a.concat( [ White(e,"preLeftBracket"), Tok("("), White(e,"postLeftBracket") ] );
 		for( arg in args ) {
-			a = a.concat( doExpr(arg, {}) );
+			a = a.concat( doExpr(arg, { usedAsValue : true }) );
 			a = a.concat( [ Tok(","), White(e,"postComma") ] );
 		}
 		if( args.length > 0 ) {
