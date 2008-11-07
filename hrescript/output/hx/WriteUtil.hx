@@ -245,11 +245,11 @@ class WriteUtil {
 					case "preOp", "postOp": if( op == "..." ) return "";
 					default:
 				}
+			case EVector(_,_,_,_): if( prop != "postComma" ) return "";
 			default:
 		}
 		switch( prop ) {
 			case "preLeftBlockBracket", "postLeftBlockBracket", "preRightBlockBracket": return "";
-			case "preLeftAngleBracket", "postLeftAngleBracket", "preRightAngleBracket": return "";
 			case "preLeftBracket": return "";
 			default:
 		}
