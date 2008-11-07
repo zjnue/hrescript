@@ -1008,9 +1008,7 @@ class Parser {
 							n = n * 10 + (char - 48);
 						default:
 							this.char = char;
-							var valStr = Std.string(n/exp);
-							if( valStr == "0" ) valStr += ".";
-							return returnToken( TConst( CFloat( valStr ) ) );
+							return returnToken( TConst( CFloat( Std.string(n/exp) ) ) );
 						}
 					}
 				case 46:
