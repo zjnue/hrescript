@@ -590,7 +590,6 @@ class Parser {
 				} else
 					break;
 			}
-			tokens.add(tk);
 			ESwitch( e1, EBlock(a) );
 		case "var":
 			var tk = token(s);
@@ -622,8 +621,6 @@ class Parser {
 				if( Type.enumEq(tk,TOp("=")) ) {
 					e = parseExpr(s);
 					tk = token(s);
-					if( tk == TSemicolon )
-						tokens.add(tk);
 				} else
 					if( tk != TComma )
 						tokens.add(tk);
@@ -637,8 +634,11 @@ class Parser {
 			if( a.length > 0 ) {
 				a.push( ETyped( EVar(ident,get,set,e), v ) );
 				EVarCollection( a );
-			} else
+			} else {
+				if( tk != TSemicolon ) 
+					tokens.add(tk);
 				ETyped( EVar(ident,get,set,e), v );
+			}
 		case "while":
 			var econd = parseExpr(s);
 			EWhile( econd, parseExpr(s) );
