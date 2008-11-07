@@ -71,7 +71,7 @@ enum Expr {
 	EVarCollection( a : Array<Expr> );
 	EInterface( n : Expr, i : Array<Expr>, e : Expr );
 	EUntyped( e : Expr );
-	EVector( n : String, tparams : Array<Expr>, cparams : Array<Expr> );
+	EVector( n : String, tparams : Array<Expr>, cparams : Array<Expr>, cBrackets : Bool );
 	EDuckType( ext : Expr, a : Array<Expr> );
 	ETypeDef( n : Expr, e : Expr, hasSemi : Bool );
 	EEnum( n : Expr, e : Expr );

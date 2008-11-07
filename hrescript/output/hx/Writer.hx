@@ -712,7 +712,9 @@ class Writer {
 			a = a.concat( doExpr(match, {}) );
 			a = a.concat( [ Tok(","), White(e,"postComma") ] );
 		}
-		a.pop(); a.pop();
+		if( matchArr.length > 0 ) {
+			a.pop(); a.pop();
+		}
 		a = a.concat( [ White(e,"preColon"), Tok(":"), White(e,"postColon") ] );
 		indent++;
 		if( eArr.length > 1 ) {
@@ -792,10 +794,17 @@ class Writer {
 		var iArr :Array<Expr> = params[1];
 		a = a.concat( [ Tok("interface"), White(e,"postKeyword") ] );
 		a = a.concat( doExpr(params[0], {}) );
+		if( iArr.length > 0 )
+			a.push( White(e,"postInterfaceName") );
 		for( i in iArr ) {
-			a = a.concat( [ Tok(","), White(e,"postComma") ] );
+			a = a.concat( [ Tok("implements"), White(e,"postImplements") ] );
 			a = a.concat( doExpr(i, {}) );
+			a = a.concat( [ Tok(","), White(e,"postComma") ] );
 		}
+		if( iArr.length > 0 ) {
+			a.pop(); a.pop();
+		}
+		a.push( White(e,"preLeftBrace") );
 		a = a.concat( doExpr(params[2], { blockBreakAfterBottomBrace : false, owner : "EInterface" }) );
 		return a;
 	}
@@ -808,11 +817,12 @@ class Writer {
 	}
 	
 	private function doEVector( e : Expr, ctx : Dynamic ) {
-		//EVector( n : String, tparams : Array<Expr>, cparams : Array<Expr> );
+		//EVector( n : String, tparams : Array<Expr>, cparams : Array<Expr>, cBrackets : Bool );
 		var a = new Array();
 		var params = Type.enumParameters(e);
 		var tparams :Array<Expr> = params[1];
 		var cparams :Array<Expr> = params[2];
+		var cBrackets :Bool = params[3];
 		a = a.concat( makeDotArr(params[0]) );
 		if( tparams.length > 0 ) {
 			a.push( White(e,"preLeftAngleBracket") );
@@ -820,26 +830,26 @@ class Writer {
 			a.push( White(e,"postLeftAngleBracket") );
 			for( tp in tparams ) {
 				a = a.concat( doExpr(tp, {}) );
-				if( tparams.length > 1 )
-					a.push( Tok(",") );
+				a = a.concat( [ Tok(","), White(e,"postComma") ] );
 			}
-			if( tparams.length > 1 )
-				a.pop();
+			if( tparams.length > 0 ) {
+				a.pop(); a.pop();
+			}
 			a.push( White(e,"preRightAngleBracket") );
 			a.push( Tok(">") );
 		}
 		if( cparams.length > 0 ) {
 			a = a.concat( [ White(e,"preColon"), Tok(":"), White(e,"postColon") ] );
-			if( cparams.length > 1 )
+			if( cBrackets )
 				a = a.concat( [ Tok("("), White(e,"postLeftBracket") ] );
 			for( cp in cparams ) {
 				a = a.concat( doExpr(cp, {}) );
-				if( cparams.length > 1 )
-					a = a.concat( [ Tok(","), White(e,"postComma") ] );
+				a = a.concat( [ Tok(","), White(e,"postComma") ] );
 			}
-			if( cparams.length > 1 )
-				a.pop();
-			if( cparams.length > 1 )
+			if( cparams.length > 0 ) {
+				a.pop(); a.pop();
+			}
+			if( cBrackets )
 				a = a.concat( [ White(e,"preRightBracket"), Tok(")") ] );
 		}
 		return a;
@@ -861,7 +871,7 @@ class Writer {
 			a = a.concat( doExpr(arg, {}) );
 			a = a.concat( [ Tok(","), White(e,"postComma") ] );
 		}
-		if( args.length > 0 ) {
+		if( args.length > 0 || ext != null ) {
 			a.pop(); a.pop();
 		}
 		a = a.concat( [ White(e,"preRightBrace"), Tok("}") ] );
@@ -901,8 +911,9 @@ class Writer {
 				a = a.concat( doExpr(arg, {}) );
 				a = a.concat( [ Tok(","), White(e,"postComma") ] );
 			}
-			if( args.length > 0 )
-				a.pop();
+			if( args.length > 0 ) {
+				a.pop(); a.pop();
+			}
 			a = a.concat( [ White(e,"preRightBracket"), Tok(")") ] );
 		}
 		return a;
