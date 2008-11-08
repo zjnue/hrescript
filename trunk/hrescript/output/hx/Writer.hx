@@ -204,7 +204,7 @@ class Writer {
 		//EBlock( e : Array<Expr> );
 		var a = new Array();
 		var params = Type.enumParameters(e);
-		if( params[0].length == 0 && ctx.blockBraces )
+		if( params[0].length == 0 && ( ctx.usedAsValue || ctx.blockBraces ) )
 			//return [ Tok("{"), Tok("}") ];
 			return [ Tok("{"), Indent(indent+1), Indent(indent), Tok("}") ];
 		if( ctx.blockStartSpace == null ) ctx.blockStartSpace = true;
