@@ -236,6 +236,11 @@ class WriteUtil {
 			case ECast(_,_): if( prop == "preLeftBracket" ) return "";
 			*/
 			case EFunction(_,b,_): if( b == null && prop == "preLeftBrace" ) return "";
+			case EOptional(_): return "";
+			case EUnop(_,_,_): return "";
+			case ECase(_,_): if( prop == "preColon" ) return "";
+			case EDefault(_): if( prop == "preColon" ) return "";
+			case EReturn(r): if( r == null ) return "";
 			case EArrayDecl(_):
 				switch(prop) {
 					case "postLeftBlockBracket", "preRightBlockBracket": return " ";
