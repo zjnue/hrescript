@@ -274,9 +274,7 @@ class Parser {
 		return ( out.length == 0 ) ? null : out.join("");
 	}
 	
-	function getVectorPath( s : haxe.io.Input, ?isNested : Bool ) {
-		if( isNested == null )
-			isNested = false;
+	function getVectorPath( s : haxe.io.Input ) {
 		var path = getDotPath( s );
 		if( path == null )
 			return null;
@@ -291,7 +289,7 @@ class Parser {
 					typeParams.push( getDuckType( s ) );
 				else {
 					tokens.add(tk);
-					typeParams.push( getVectorPath(s, true) );
+					typeParams.push( getVectorPath(s) );
 				}
 				tk = token(s); 
 			}
@@ -314,8 +312,7 @@ class Parser {
 					return EVector( path, typeParams, [getVectorPath(s)], cBrackets );
 				}
 			case TComma:
-				if( ! isNested )
-					tokens.add(tk);
+				tokens.add(tk);
 				return EVector( path, typeParams, constraintParams, cBrackets );
 			case TPClose:
 				tokens.add(tk);
