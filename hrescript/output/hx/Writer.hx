@@ -195,7 +195,7 @@ class Writer {
 		//EParent( e : Expr );
 		var a = new Array();
 		a = a.concat( [ White(e,"preLeftBracket"), Tok("("), White(e,"postLeftBracket") ] );
-		a = a.concat( doExpr(Type.enumParameters(e)[0], {}) );
+		a = a.concat( doExpr(Type.enumParameters(e)[0], { usedAsValue : true }) );
 		a = a.concat( [ White(e,"preRightBracket"), Tok(")") ] );
 		return a;
 	}
