@@ -719,7 +719,7 @@ class Writer {
 		indent++;
 		if( eArr.length > 1 ) {
 			a.push( Newline  );
-			a = a.concat( doExprArr( eArr, { usedAsValue : ctx.usedAsValue, transToLast : true } ) );
+			a = a.concat( doExprArr( eArr, { usedAsValue : ctx.usedAsValue, transToLast : ctx.usedAsValue } ) );
 		} else if( eArr.length > 0 ) {
 			a = a.concat( doExpr( eArr[0], { usedAsValue : ctx.usedAsValue } ) );
 			a = addCondSemi(a,eArr[0],ctx.usedAsValue);
@@ -739,7 +739,7 @@ class Writer {
 		indent++;
 		if( eArr.length > 1 ) {
 			a.push( Newline  );
-			a = a.concat( doExprArr( eArr, { usedAsValue : ctx.usedAsValue, transToLast : true } ) );
+			a = a.concat( doExprArr( eArr, { usedAsValue : ctx.usedAsValue, transToLast : ctx.usedAsValue } ) );
 		} else if( eArr.length > 0 ) {
 			a = a.concat( doExpr( eArr[0], { usedAsValue : ctx.usedAsValue } ) );
 			a = addCondSemi(a,eArr[0],ctx.usedAsValue);
