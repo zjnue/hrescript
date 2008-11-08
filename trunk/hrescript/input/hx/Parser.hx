@@ -399,12 +399,12 @@ class Parser {
 					ext = getVectorPath(s);
 					tk = token(s); // swallow comma
 					tk = token(s);
-					if( ! Type.enumEq(tk,TId("var")) ) {
+					if( ! Type.enumEq(tk,TId("var")) && ! Type.enumEq(tk,TId("function")) ) {
 						isDuckType = true;
 						tokens.add(tk);
 					}
 				} else {
-					if( ! Type.enumEq(tk,TId("var")) ) {
+					if( ! Type.enumEq(tk,TId("var")) && ! Type.enumEq(tk,TId("function")) ) {
 						isDuckType = true;
 						tokens.add(tk);
 					}
