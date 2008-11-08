@@ -159,11 +159,6 @@ class Parser {
 		return e;
 	}
 	
-	/**
-		parses anonymous objects like { a : 10, b : 12 }, turning each 'a : 10' into
-		an EBinop assignment.. it also enforces a semi-colon at the end (which is different
-		from normal blocks.
-	**/
 	function readObject( s : haxe.io.Input ) {
 		var a = new Array();
 		var tk = token(s);
@@ -848,6 +843,10 @@ class Parser {
 						if( !ops[char] ) {
 							if( op.charCodeAt(0) == 47 )
 								return tokenComment(s,op,char);
+							this.char = char;
+							return returnToken( TOp(op) );
+						}
+						if( op == "==" && String.fromCharCode(char) != "=" ) { // covers: if(a==-1)
 							this.char = char;
 							return returnToken( TOp(op) );
 						}
