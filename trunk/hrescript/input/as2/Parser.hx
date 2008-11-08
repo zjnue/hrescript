@@ -841,13 +841,9 @@ class Parser {
 					var prev = char;
 					while( true ) {
 						char = readChar(s);
-						if( (prev == 61 && char != 61) || // 60 : '<'; 61 : '='; 62 : '>'
-							((prev == 62 && char != 61) || (prev == 62 && char != 62)) ||
-							((prev == 60 && char != 61) || (prev == 60 && char != 60)) ) {
-							this.char = char;
-							return returnToken( TOp(op) );	
-						}
-						if( !ops[char] ) {
+						if( !ops[char] || (prev == 61 && char != 61) || // 60 : '<'; 61 : '='; 62 : '>'
+							((prev == 62 && char != 61) && (prev == 62 && char != 62)) ||
+							((prev == 60 && char != 61) && (prev == 60 && char != 60)) ) {
 							if( op.charCodeAt(0) == 47 )
 								return tokenComment(s,op,char);
 							this.char = char;
