@@ -966,7 +966,6 @@ class Writer {
 	}
 	
 	private function doECast( e : Expr, ctx : Dynamic ) {
-		////ECast( e : Expr, type : Expr );
 		//ECast( e : Expr, type : Expr, brackets : Bool );
 		var a = new Array();
 		var params = Type.enumParameters(e);
