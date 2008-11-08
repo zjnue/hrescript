@@ -399,7 +399,7 @@ class Parser {
 					ext = getVectorPath(s);
 					tk = token(s); // swallow comma
 					tk = token(s);
-					if( ! Type.enumEq(tk,TId("var")) && ! Type.enumEq(tk,TId("function")) ) {
+					if( ! Type.enumEq(tk,TId("var")) && ! Type.enumEq(tk,TId("function")) ) { //TODO: modifier support
 						isDuckType = true;
 						tokens.add(tk);
 					}
@@ -1033,10 +1033,16 @@ class Parser {
 				if( ops[char] ) {
 					var op = String.fromCharCode(char);
 					var isEreg = false;
-					var prev = null;
+					var prev = char;
 					var fwdslash = false;
 					while( true ) {
 						char = readChar(s);
+						if( (prev == 61 && char != 61) || // 60 : '<'; 61 : '='; 62 : '>'
+							((prev == 62 && char != 61) || (prev == 62 && char != 62)) ||
+							((prev == 60 && char != 61) || (prev == 60 && char != 60)) ) {
+							this.char = char;
+							return returnToken( TOp(op) );	
+						}
 						if( op == "~/") isEreg = true;
 						if( isEreg ) {
 							if( char == 47 && prev != 92 ) // 47 = '/' .. 92 = '\'
@@ -1055,10 +1061,6 @@ class Parser {
 							}
 						}
 						prev = char;
-						if( op == "==" && String.fromCharCode(char) != "=" ) { // covers: if(a==-1)
-							this.char = char;
-							return returnToken( TOp(op) );
-						}
 						op += String.fromCharCode(char);
 					}
 				}
