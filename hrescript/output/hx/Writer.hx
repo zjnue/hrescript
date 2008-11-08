@@ -907,7 +907,7 @@ class Writer {
 			a = a.concat( [ Newline, getIndent(--indent), Tok("}") ] );
 		}
 		if( params[4] )
-			a.push( Tok(";") );
+			a.push( Semi );
 		return a;
 	}
 	
