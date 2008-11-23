@@ -430,8 +430,9 @@ class Writer {
 		if( Type.enumConstructor(params[1]) != "EBlock" ) {
 			a.push( Newline );
 			a.push( getIndent( ++indent ) );
-		}
-		a = a.concat( doExpr(params[1], { blockBreakAfterBottomBrace : false, blockStartSpace : true }) );
+		} else
+			a.push( White(e,"preLeftBrace") );
+		a = a.concat( doExpr(params[1], { blockBreakAfterBottomBrace : false, blockStartSpace : false }) );
 		if( Type.enumConstructor(params[1]) != "EBlock" ) {
 			addCondSemi(a, params[1]);
 			indent--;
@@ -446,12 +447,13 @@ class Writer {
 		a = a.concat( [ Tok("for"), White(e,"preLeftBracket"), Tok("("), White(e,"postLeftBracket"), 
 			Tok(params[0]), White(e,"preIn"), Tok("in"), White(e,"postIn") ] );
 		a = a.concat( doExpr(params[1], {}) );
-		a = a.concat( [ White(e,"preRightBracket"), Tok(")"), White(e,"postRightBracket")  ] );
+		a = a.concat( [ White(e,"preRightBracket"), Tok(")") ] );
 		if( Type.enumConstructor(params[2]) != "EBlock" ) {
 			a.push( Newline );
 			a.push( getIndent( ++indent ) );
-		}
-		a = a.concat( doExpr(params[2], { blockBreakAfterBottomBrace : false }) );
+		} else
+			a.push( White(e,"preLeftBrace") );
+		a = a.concat( doExpr(params[2], { blockBreakAfterBottomBrace : false, blockStartSpace : false }) );
 		if( Type.enumConstructor(params[2]) != "EBlock" ) { // add semi for non-block. use blocks for all fors?
 			addCondSemi(a, params[2]);
 			indent--;
@@ -580,8 +582,9 @@ class Writer {
 			a.push( getIndent( ++indent ) );	
 		} else {
 			inln = true;
+			a.push( White(e,"preLeftBrace") );
 		}
-		a = a.concat( doExpr(params[0], { blockBreakAfterBottomBrace : false, blockStartSpace : true }) );
+		a = a.concat( doExpr(params[0], { blockBreakAfterBottomBrace : false, blockStartSpace : false }) );
 		if( Type.enumConstructor(params[0]) != "EBlock" ) {
 			if( ! ctx.usedAsValue )
 				addCondSemi(a,params[0]);
@@ -602,6 +605,7 @@ class Writer {
 		ctx.blockBraces = true;
 		ctx.blockBreakAfterTopBrace = true;
 		ctx.blockBreakAfterBottomBrace = false;
+		ctx.blockStartSpace = false;
 		if( ctx.inln ) {
 			a.push( White(e,"preKeyword") );
 			ctx.inln = null;
@@ -612,7 +616,8 @@ class Writer {
 		if( Type.enumConstructor(params[1]) != "EBlock" ) {
 			a.push( Newline );
 			a.push( getIndent( ++indent ) );
-		}
+		} else
+			a.push( White(e,"preLeftBrace") );
 		a = a.concat( doExpr(params[1], ctx) );
 		if( Type.enumConstructor(params[1]) != "EBlock" )
 			indent--;
@@ -686,7 +691,7 @@ class Writer {
 			}
 		}
 		a.push( White(e,"preLeftBrace") );
-		a = a.concat( doExpr(params[3], { blockBreakAfterBottomBrace : false, owner : "EClass" }) );
+		a = a.concat( doExpr(params[3], { blockBreakAfterBottomBrace : false, blockStartSpace : false, owner : "EClass" }) );
 		return a;
 	}
 
@@ -697,7 +702,7 @@ class Writer {
 		a.push( Tok("switch") );
 		a = a.concat( doExpr(params[0], {}) );
 		a.push( White(e,"preLeftBrace") );
-		a = a.concat( doExpr(params[1], { blockBreakAfterBottomBrace : false, usedAsValue : ctx.usedAsValue }) );
+		a = a.concat( doExpr(params[1], { blockBreakAfterBottomBrace : false, usedAsValue : ctx.usedAsValue, blockStartSpace : false }) );
 		return a;
 	}
 	
@@ -754,11 +759,12 @@ class Writer {
 		//EDoWhile( e : Expr, cond : Expr );
 		var a = new Array();
 		var params = Type.enumParameters(e);
-		a = a.concat( [ Tok("do"), White(e,"postKeyword") ] );
+		a = a.concat( [ Tok("do") ] );
 		if( Type.enumConstructor(params[0]) != "EBlock" ) {
 			a.push( Newline );
 			a.push( getIndent( ++indent ) );
-		}
+		} else
+			a.push( White(e,"preLeftBrace") );
 		a = a.concat( doExpr(params[0], { blockBreakAfterBottomBrace : false, blockStartSpace : false }) );
 		if( Type.enumConstructor(params[0]) != "EBlock" ) {
 			addCondSemi(a, params[0]);
@@ -805,7 +811,7 @@ class Writer {
 			a.pop(); a.pop();
 		}
 		a.push( White(e,"preLeftBrace") );
-		a = a.concat( doExpr(params[2], { blockBreakAfterBottomBrace : false, owner : "EInterface" }) );
+		a = a.concat( doExpr(params[2], { blockBreakAfterBottomBrace : false, blockStartSpace : false, owner : "EInterface" }) );
 		return a;
 	}
 	
