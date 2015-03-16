@@ -1,0 +1,1 @@
+provides code reformatting functionality for haXe and as2 and attempts to provide extensions to the existing hscript library
